@@ -42,7 +42,6 @@ jobs:
         key: ${{ runner.os }}-cargo-debug-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
           ${{ runner.os }}-cargo-debug-
-          solana-${{ runner.os }}-v0000-${{ env.solana_version }}
     - name: Install rustfmt and clippy
       run: rustup component add rustfmt clippy
     - name: Run rustfmt
@@ -55,10 +54,23 @@ jobs:
     container:
       image: rust:latest
   
-    needs: rust-checks
+    needs: 
+      - rust-checks
+      - install
   
     steps:
     - uses: actions/checkout@v4
+    - uses: actions/cache@v3
+      with:
+        path: 
+          - target/release
+          - target/sbf-solana-solana
+        key: ${{ runner.os }}-cargo-release-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-release-
+          solana-${{ runner.os }}-v0000-${{ env.solana_version }}
+    - name: Build shared object
+      run: cargo build-sbf -- -Znext-lockfile-bump
     - uses: actions/cache@v3
       with:
         path: target/debug
@@ -67,11 +79,3 @@ jobs:
           ${{ runner.os }}-cargo-debug-
     - name: Run tests
       run: cargo test
-    - uses: actions/cache@v3
-      with:
-        path: target/release
-        key: ${{ runner.os }}-cargo-release-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-cargo-release-
-    - name: Build shared object
-      run: cargo build-sbf 
