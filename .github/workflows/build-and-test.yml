@@ -66,10 +66,9 @@ jobs:
           target/release
           target/sbf-solana-solana
         key: ${{ runner.os }}-cargo-release-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys:
-          ${{ runner.os }}-cargo-release-
-        restore-keys:
+        restore-keys: |
           solana-${{ runner.os }}-v0000-${{ env.solana_version }}
+          ${{ runner.os }}-cargo-release-
     - name: Build shared object
       run: cargo build-sbf -- -Znext-lockfile-bump
     - uses: actions/cache@v3
