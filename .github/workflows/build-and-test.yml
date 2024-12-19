@@ -86,11 +86,6 @@ jobs:
           ~/.cache/solana/
           ~/.local/share/solana/
         key: solana-${{ runner.os }}-v0000-${{ env.solana_version }}
-    - name: setup solana
-      run: |
-        export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
-        solana --version
-
     - name: Build shared object
       run: |
         export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
