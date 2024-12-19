@@ -67,6 +67,14 @@ jobs:
     - uses: actions/cache@v4
       with:
         path: |
+          ~/.cargo/
+          target/debug
+        key: ${{ runner.os }}-cargo-debug-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-debug-
+    - uses: actions/cache@v4
+      with:
+        path: |
           target/release
           target/sbf-solana-solana
         key: ${{ runner.os }}-cargo-release-${{ hashFiles('**/Cargo.lock') }}
@@ -78,15 +86,12 @@ jobs:
           ~/.cache/solana/
           ~/.local/share/solana/
         key: solana-${{ runner.os }}-v0000-${{ env.solana_version }}
+    - name: setup solana
+      run: |
+        export PATH="/home/runner/.local/share/solana/install/active_release/bin:$PATH"
+        solana --version
+
     - name: Build shared object
       run: cargo build-sbf -- -Znext-lockfile-bump
-    - uses: actions/cache@v4
-      with:
-        path: |
-          ~/.cargo/
-          target/debug
-        key: ${{ runner.os }}-cargo-debug-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-cargo-debug-
     - name: Run tests
       run: cargo test
