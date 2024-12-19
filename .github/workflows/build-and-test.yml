@@ -89,10 +89,11 @@ jobs:
     - name: setup solana
       run: |
         export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
-        ls -lah $HOME
         solana --version
 
     - name: Build shared object
-      run: cargo build-sbf -- -Znext-lockfile-bump
+      run: |
+        export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+        cargo build-sbf -- -Znext-lockfile-bump
     - name: Run tests
       run: cargo test
