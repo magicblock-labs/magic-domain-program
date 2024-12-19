@@ -36,9 +36,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       with:
-        path: target/debug
+        path: |
+          ~/.cargo/
+          target/debug
         key: ${{ runner.os }}-cargo-debug-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
           ${{ runner.os }}-cargo-debug-
@@ -60,7 +62,7 @@ jobs:
   
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       with:
         path: |
           target/release
@@ -68,7 +70,6 @@ jobs:
         key: ${{ runner.os }}-cargo-release-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
           solana-${{ runner.os }}-v0000-${{ env.solana_version }}
-          ${{ runner.os }}-cargo-release-
     - name: Build shared object
       run: cargo build-sbf -- -Znext-lockfile-bump
     - uses: actions/cache@v3
