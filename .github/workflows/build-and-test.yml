@@ -76,6 +76,7 @@ jobs:
       with:
         path: |
           target/release
+          target/deploy
           target/sbf-solana-solana
         key: ${{ runner.os }}-cargo-release-${{ hashFiles('**/Cargo.lock') }}
     - uses: actions/cache@v4

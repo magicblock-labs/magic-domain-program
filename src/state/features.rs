@@ -2,11 +2,15 @@ use std::ops::BitOrAssign;
 
 use borsh::{BorshDeserialize, BorshSerialize};
 
+#[cfg(feature = "no-entrypoint")]
+use serde::{Deserialize, Serialize};
+
 #[derive(Debug, Default, BorshSerialize, BorshDeserialize, PartialEq, Eq)]
 pub struct FeaturesSet([u64; 4]);
 
 /// A first approximation of features supported by ER validator
 #[derive(Clone, Copy)]
+#[cfg_attr(feature = "no-entrypoint", derive(Serialize))]
 #[repr(u8)]
 pub enum Feature {
     Randomness = 0,
