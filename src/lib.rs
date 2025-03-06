@@ -1,3 +1,5 @@
+#![allow(unexpected_cfgs)] // silence clippy for target_os solana and other solana program custom features
+
 use solana_program::declare_id;
 
 pub mod consts;
