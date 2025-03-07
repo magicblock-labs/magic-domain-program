@@ -8,6 +8,7 @@ use crate::{consts::VALIDATOR_INFO_SEED, ID};
 use super::features::FeaturesSet;
 
 #[derive(Debug, BorshSerialize, BorshDeserialize)]
+#[cfg_attr(feature = "no-entrypoint", derive(PartialEq, Eq, Clone))]
 pub struct ValidatorInfo {
     pub identity: Pubkey,
     /// NOTE: usage of variable length URLs introduces a lot of headache,

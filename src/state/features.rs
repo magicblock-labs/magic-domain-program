@@ -6,6 +6,7 @@ use borsh::{BorshDeserialize, BorshSerialize};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Default, BorshSerialize, BorshDeserialize, PartialEq, Eq)]
+#[cfg_attr(feature = "no-entrypoint", derive(Clone))]
 pub struct FeaturesSet([u64; 4]);
 
 /// A first approximation of features supported by ER validator
