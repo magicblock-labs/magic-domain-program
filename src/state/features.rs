@@ -1,13 +1,8 @@
 use std::ops::BitOrAssign;
 
-use borsh::{BorshDeserialize, BorshSerialize};
-
-#[cfg(feature = "no-entrypoint")]
-use serde::{Deserialize, Serialize};
-
-#[derive(Debug, Default, BorshSerialize, BorshDeserialize, PartialEq, Eq)]
+#[derive(Debug, Default, PartialEq, Eq)]
 #[cfg_attr(feature = "no-entrypoint", derive(Clone))]
-pub struct FeaturesSet([u64; 4]);
+pub struct FeaturesSet(pub(crate) [u8; 32]);
 
 /// A first approximation of features supported by ER validator
 #[derive(Clone, Copy)]
@@ -20,7 +15,7 @@ pub enum Feature {
 }
 
 impl FeaturesSet {
-    const SEGMENT: usize = u64::BITS as usize;
+    const SEGMENT: usize = u8::BITS as usize;
 
     pub fn activate(mut self, feature: Feature) -> Self {
         let (segment, offset) = self.locate(feature);
@@ -32,15 +27,15 @@ impl FeaturesSet {
     fn deactivate(&mut self, feature: Feature) {
         use std::ops::{BitAndAssign, Not};
         let (segment, offset) = self.locate(feature);
-        segment.bitand_assign((1_u64 << offset).not());
+        segment.bitand_assign((1u8 << offset).not());
     }
 
-    fn locate(&mut self, feature: Feature) -> (&mut u64, u64) {
+    fn locate(&mut self, feature: Feature) -> (&mut u8, u8) {
         let index = feature as usize / Self::SEGMENT;
         let offset = feature as usize % Self::SEGMENT;
         // SAFETY: feature cannot exceed 255 (repr(u8)), 0..255 / 64 <= 3
         let segment = unsafe { self.0.get_unchecked_mut(index) };
-        (segment, offset as u64)
+        (segment, offset as u8)
     }
 
     pub fn contains(&mut self, feature: Feature) -> bool {
@@ -49,7 +44,6 @@ impl FeaturesSet {
     }
 }
 
-#[cfg(test)]
 #[test]
 fn test_features_op() {
     let mut features = FeaturesSet::default().activate(Feature::Randomness);

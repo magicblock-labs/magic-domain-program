@@ -1,12 +1,9 @@
-use borsh::BorshDeserialize;
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
     program_error::ProgramError,
 };
 
-use crate::{
-    instructions::unregister::UnregisterInstruction, state::validator_info::ValidatorInfo, ID,
-};
+use crate::{instructions::unregister::UnregisterInstruction, state::record::ErRecord, ID};
 
 pub fn process_unregistration<'a>(
     mut accounts: impl Iterator<Item = &'a AccountInfo<'a>>,
@@ -28,15 +25,14 @@ pub fn process_unregistration<'a>(
         return Err(ProgramError::UninitializedAccount);
     }
     let data = pda_account.try_borrow_data()?;
-    let info =
-        ValidatorInfo::try_from_slice(&data).map_err(|_| ProgramError::InvalidAccountData)?;
+    let record = ErRecord::deserialize(&data).map_err(|_| ProgramError::InvalidAccountData)?;
     drop(data);
 
-    if ix.0 != info.identity {
+    if ix.0 != *record.identity {
         return Err(ProgramError::InvalidArgument);
     }
 
-    let (pda, _) = info.pda();
+    let (pda, _) = record.pda();
 
     if pda != *pda_account.key {
         return Err(ProgramError::InvalidArgument);

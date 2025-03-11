@@ -1,4 +1,3 @@
-use borsh::BorshSerialize;
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
     program::invoke_signed,
@@ -8,9 +7,7 @@ use solana_program::{
     sysvar::Sysvar,
 };
 
-use crate::{
-    instructions::register::RegisterInstruction, state::validator_info::ValidatorInfo, ID,
-};
+use crate::{instructions::register::RegisterInstruction, ID};
 
 pub fn process_registration<'a>(
     mut accounts: impl Iterator<Item = &'a AccountInfo<'a>>,
@@ -20,7 +17,7 @@ pub fn process_registration<'a>(
     let pda_account = next_account_info(&mut accounts)?;
     let system_program = next_account_info(&mut accounts)?;
 
-    if !(payer.is_signer && *payer.key == ix.0.identity) {
+    if !(payer.is_signer && *payer.key == *ix.0.identity) {
         return Err(ProgramError::InvalidArgument);
     }
 
@@ -34,7 +31,7 @@ pub fn process_registration<'a>(
         return Err(ProgramError::InvalidArgument);
     }
 
-    let mut data = Vec::with_capacity(std::mem::size_of::<ValidatorInfo>());
+    let mut data = vec![0; ix.0.serialized_size()];
     ix.0.serialize(&mut data)?;
 
     let space = data.len();

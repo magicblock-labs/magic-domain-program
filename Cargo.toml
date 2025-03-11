@@ -20,9 +20,11 @@ name = "mdp"
 solana-program = { version = "=2.1.11" }
 security-txt = { version = "1.1.1", package = "solana-security-txt", optional = true }
  
-# serialization/deserialization
-borsh = { version = "1.5.3", features = [ "derive" ] }
-serde = { version = "1.0", features = [ "derive" ], optional = true }
+
+# misc
+[dependencies.derive_more]
+version = "2.0"
+features = [ "deref", "deref_mut", "from" ]
 
 [dev-dependencies]
 program-test = { package = "solana-program-test", version = "=2.1.11" }
@@ -32,7 +34,6 @@ tokio = { version = "1.0", features = [ "macros", "rt" ] }
 [features]
 entrypoint = ["security-txt"]
 default = ["entrypoint"]
-no-entrypoint = ["serde"]
 
 
 

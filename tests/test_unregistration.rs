@@ -7,12 +7,12 @@ async fn test_unregistration() {
     let TestEnv {
         mut banks,
         identity,
-        info,
+        record,
         ..
     } = common::setup().await;
-    let pda = info.pda().0;
+    let pda = record.pda().0;
 
-    let result = common::register(&mut banks, info, &identity).await;
+    let result = common::register(&mut banks, record, &identity).await;
     assert_ok!(result, "error processing register transaction {}");
 
     let result = common::unregister(&mut banks, &identity, pda).await;

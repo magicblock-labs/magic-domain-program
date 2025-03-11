@@ -4,6 +4,7 @@ use solana_program::declare_id;
 
 pub mod consts;
 pub mod instructions;
+pub mod serde;
 pub mod state;
 
 #[cfg(feature = "entrypoint")]

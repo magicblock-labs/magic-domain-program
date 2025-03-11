@@ -1,5 +1,4 @@
 use crate::{instructions::Instruction, processors::*};
-use borsh::BorshDeserialize;
 use solana_program::{
     account_info::AccountInfo, entrypoint::ProgramResult, program_error::ProgramError,
     pubkey::Pubkey,
@@ -15,11 +14,11 @@ pub fn process<'a>(
     if *program_id != crate::ID {
         return Err(ProgramError::IncorrectProgramId);
     }
-    let ix = Instruction::try_from_slice(data)?;
+    let ix = Instruction::deserialize(data)?;
     let accounts = accounts.iter();
     match ix {
         Instruction::Register(ix) => register::process_registration(accounts, ix),
-        Instruction::SyncInfo(ix) => sync::process_sync_info(accounts, ix),
+        Instruction::SyncRecord(ix) => sync::process_sync_record(accounts, ix),
         Instruction::Unregister(ix) => unregister::process_unregistration(accounts, ix),
     }
 }
