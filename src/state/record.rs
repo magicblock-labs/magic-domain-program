@@ -100,6 +100,12 @@ pub struct RecordBuilder {
 }
 
 impl RecordBuilder {
+    /// Creates a new record builder, populating all the known fields with deserialized data
+    /// _args_:
+    /// *buffer* - serialized representation of ErRecord
+    /// *error* - boolean flag indicating whether to error on deserialization failure, this should be
+    ///         always set to true within program code, but clients most likely will prefer to keep it set
+    ///         to false, so that any new fields, that client is not aware of, can be safely ignored.
     pub fn populate(buffer: &[u8], error: bool) -> Result<Self, ProgramError> {
         let mut builder = Self::default();
         let mut deserializer = FieldDeserializer::new(buffer);
