@@ -7,12 +7,19 @@ use crate::{
 };
 
 #[derive(Debug, From, DerefMut, Deref)]
+#[cfg_attr(not(feature = "entrypoint"), derive(PartialEq, Eq, Clone))]
 pub struct Identity(pub Pubkey);
+
 #[derive(Debug, From, DerefMut, Deref)]
+#[cfg_attr(not(feature = "entrypoint"), derive(PartialEq, Eq, Clone))]
 pub struct BlockTimeMs(pub u16);
+
 #[derive(Debug, From, DerefMut, Deref)]
+#[cfg_attr(not(feature = "entrypoint"), derive(PartialEq, Eq, Clone))]
 pub struct Fees(pub u16);
+
 #[derive(Debug, From, DerefMut, Deref, Clone, PartialEq, Eq)]
+#[cfg_attr(not(feature = "entrypoint"), derive(PartialEq, Eq, Clone))]
 pub struct Addr(pub Vec<u8>);
 
 pub trait Field: Sized {

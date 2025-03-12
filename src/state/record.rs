@@ -1,5 +1,5 @@
-use solana_program::program_error::ProgramError;
 use solana_program::pubkey::Pubkey;
+use solana_program::{log, program_error::ProgramError};
 
 use crate::{
     consts::{tags, VALIDATOR_INFO_SEED},
@@ -16,7 +16,7 @@ use super::{
 /// bump the RegistryRecord version, and update the serde logic
 #[derive(Debug)]
 #[repr(C)]
-#[cfg_attr(feature = "no-entrypoint", derive(PartialEq, Eq, Clone))]
+#[cfg_attr(not(feature = "entrypoint"), derive(PartialEq, Eq, Clone))]
 pub struct ErRecord {
     pub identity: field::Identity,
     /// range of up to ~65 seconds should be plenty for all use cases
@@ -71,7 +71,12 @@ impl ErRecord {
 
         macro_rules! extract {
             ($field: ident) => {
-                builder.$field.ok_or(ProgramError::InvalidAccountData)?
+                builder
+                    .$field
+                    .ok_or(ProgramError::InvalidAccountData)
+                    .inspect_err(|_| {
+                        log::msg!("failed to deserialize {} field", stringify!($field))
+                    })?
             };
         }
 

@@ -1,5 +1,5 @@
-use solana_program::program_error::ProgramError;
 use solana_program::pubkey::Pubkey;
+use solana_program::{log, program_error::ProgramError};
 
 use crate::{
     consts::{ix, VALIDATOR_INFO_SEED},
@@ -27,10 +27,13 @@ impl SyncRecordInstruction {
 
     pub fn deserialize(data: &[u8]) -> Result<Self, ProgramError> {
         let builder = RecordBuilder::populate(data, true)?;
+        let identity = builder
+            .identity
+            .ok_or(ProgramError::InvalidInstructionData)
+            .inspect_err(|_| log::msg!("failed to deserialize required identity field"))?;
+
         Ok(Self {
-            identity: builder
-                .identity
-                .ok_or(ProgramError::InvalidInstructionData)?,
+            identity,
             block_time_ms: builder.block_time_ms,
             features: builder.features,
             fees: builder.fees,
