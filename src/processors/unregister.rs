@@ -1,16 +1,17 @@
 use borsh::BorshDeserialize;
+use solana_program::pubkey::Pubkey;
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
     program_error::ProgramError,
 };
 
-use crate::{
-    instructions::unregister::UnregisterInstruction, state::validator_info::ValidatorInfo, ID,
-};
+use crate::state::record::ErRecord;
+use crate::ID;
 
+/// Unregisters given ER node, by removing its record from domain registry
 pub fn process_unregistration<'a>(
     mut accounts: impl Iterator<Item = &'a AccountInfo<'a>>,
-    ix: UnregisterInstruction,
+    node_id: Pubkey,
 ) -> Result<(), ProgramError> {
     let payer = next_account_info(&mut accounts)?;
     let pda_account = next_account_info(&mut accounts)?;
@@ -20,7 +21,7 @@ pub fn process_unregistration<'a>(
         return Err(ProgramError::InvalidAccountOwner);
     }
 
-    if !(payer.is_signer && *payer.key == ix.0) {
+    if !(payer.is_signer && *payer.key == node_id) {
         return Err(ProgramError::InvalidArgument);
     }
 
@@ -28,15 +29,14 @@ pub fn process_unregistration<'a>(
         return Err(ProgramError::UninitializedAccount);
     }
     let data = pda_account.try_borrow_data()?;
-    let info =
-        ValidatorInfo::try_from_slice(&data).map_err(|_| ProgramError::InvalidAccountData)?;
+    let record = ErRecord::try_from_slice(&data).map_err(|_| ProgramError::InvalidAccountData)?;
     drop(data);
 
-    if ix.0 != info.identity {
+    if node_id != *record.identity() {
         return Err(ProgramError::InvalidArgument);
     }
 
-    let (pda, _) = info.pda();
+    let (pda, _) = record.pda();
 
     if pda != *pda_account.key {
         return Err(ProgramError::InvalidArgument);

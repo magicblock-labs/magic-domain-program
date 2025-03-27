@@ -1,15 +1,16 @@
 use borsh::{BorshDeserialize, BorshSerialize};
-use register::RegisterInstruction;
-use sync::SyncInfoInstruction;
-use unregister::UnregisterInstruction;
+use solana_program::pubkey::Pubkey;
+use sync::SyncInstruction;
 
-pub mod register;
+use crate::state::record::ErRecord;
+
 pub mod sync;
-pub mod unregister;
+pub mod version;
 
+/// Supported program instructions
 #[derive(BorshSerialize, BorshDeserialize)]
 pub enum Instruction {
-    Register(RegisterInstruction),
-    Unregister(UnregisterInstruction),
-    SyncInfo(SyncInfoInstruction),
+    Register(ErRecord),
+    Unregister(Pubkey),
+    Sync(SyncInstruction),
 }

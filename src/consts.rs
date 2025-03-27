@@ -1,1 +1,2 @@
-pub const VALIDATOR_INFO_SEED: &[u8] = b"validator-info";
+/// Seed string used in PDA derivation for domain registry record
+pub const ER_RECORD_SEED: &[u8] = b"er-record";

@@ -8,19 +8,18 @@ use solana_program::{
     sysvar::Sysvar,
 };
 
-use crate::{
-    instructions::register::RegisterInstruction, state::validator_info::ValidatorInfo, ID,
-};
+use crate::{state::record::ErRecord, ID};
 
+/// Registers ER node in domain registry, by creating a record (PDA) with all the relevant ER information
 pub fn process_registration<'a>(
     mut accounts: impl Iterator<Item = &'a AccountInfo<'a>>,
-    ix: RegisterInstruction,
+    record: ErRecord,
 ) -> Result<(), ProgramError> {
     let payer = next_account_info(&mut accounts)?;
     let pda_account = next_account_info(&mut accounts)?;
     let system_program = next_account_info(&mut accounts)?;
 
-    if !(payer.is_signer && *payer.key == ix.0.identity) {
+    if !(payer.is_signer && payer.key == record.identity()) {
         return Err(ProgramError::InvalidArgument);
     }
 
@@ -28,18 +27,18 @@ pub fn process_registration<'a>(
         return Err(ProgramError::AccountAlreadyInitialized);
     }
 
-    let (pda, bump) = ix.0.pda();
+    let (pda, bump) = record.pda();
 
     if pda != *pda_account.key {
         return Err(ProgramError::InvalidArgument);
     }
 
-    let mut data = Vec::with_capacity(std::mem::size_of::<ValidatorInfo>());
-    ix.0.serialize(&mut data)?;
+    let mut data = Vec::new();
+    record.serialize(&mut data)?;
 
     let space = data.len();
     let rent = Rent::get()?.minimum_balance(data.len());
-    let [s1, s2] = ix.0.seeds();
+    let [s1, s2] = record.seeds();
 
     let create_pda_ix = create_account(payer.key, &pda, rent, space as u64, &ID);
     invoke_signed(

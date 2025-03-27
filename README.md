@@ -28,14 +28,14 @@ Once deployed, the Magic Domain Program can be interacted with using regular tra
     let identity = Keypair::new();
     let features = FeaturesSet::default().activate(Feature::Randomness);
     // here we declare all the parameters of our ER
-    let info = ValidatorInfo {
+    let record = ErRecord::V0(RecordV0 {
         identity: identity.pubkey(),
-        addr: SocketAddrV4::from_str("241.132.2.41:9324").unwrap(),
+        addr: "https://241.132.2.41:9324/".to_string(),
         block_time_ms: 50,
         fees: 1000,
         features,
-    };
-    let ix = Instruction::Register(RegisterInstruction(info));
+    });
+    let ix = Instruction::Register(record);
     let ix = SolanaInstruction::new_with_borsh(
         mdp::ID,
         &ix,
@@ -53,9 +53,9 @@ Once deployed, the Magic Domain Program can be interacted with using regular tra
 2. **Sync ER parameters with chain**
 
    ```rust
-    let ix = Instruction::SyncInfo(SyncInfoInstruction {
+    let ix = Instruction::Sync(SyncInstruction {
         identity: identity.pubkey(),
-        addr: Some(SocketAddrV4::from_str("21.132.1.4:9324").unwrap()),
+        addr: Some("https://127.145.24.55:9324".to_string()),
         block_time_ms: Some(50),
         fees: None,
         features: None,
@@ -78,7 +78,7 @@ Once deployed, the Magic Domain Program can be interacted with using regular tra
 3. **Unregister ER (delete record on chain)**
 
    ```rust
-   let ix = Instruction::Unregister(UnregisterInstruction(identity.pubkey()));
+   let ix = Instruction::Unregister(identity.pubkey());
    let ix = SolanaInstruction::new_with_borsh(
            mdp::ID,
            &ix,

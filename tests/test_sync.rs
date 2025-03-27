@@ -1,8 +1,6 @@
-use std::net::{Ipv4Addr, SocketAddrV4};
-
 use borsh::BorshDeserialize;
 use common::TestEnv;
-use mdp::state::validator_info::ValidatorInfo;
+use mdp::state::record::ErRecord;
 use sdk::account::Account;
 
 pub mod common;
@@ -12,12 +10,12 @@ async fn test_sync_info() {
     let TestEnv {
         mut banks,
         identity,
-        info,
+        record,
         ..
     } = common::setup().await;
-    let pda = info.pda().0;
+    let pda = record.pda().0;
 
-    let result = common::register(&mut banks, info, &identity).await;
+    let result = common::register(&mut banks, record, &identity).await;
     assert_ok!(result, "error processing register transaction {}");
 
     let result = banks.get_account(pda).await;
@@ -25,18 +23,16 @@ async fn test_sync_info() {
     let acc = assert_ok!(result, "error querying registration PDA from banks {}");
     assert!(matches!(acc, Some(Account { owner: mdp::ID, .. })));
     let acc = acc.unwrap();
-    let result = ValidatorInfo::try_from_slice(&acc.data);
-    let mut info = assert_ok!(result, "error querying registration PDA from banks {}");
+    let result = ErRecord::try_from_slice(&acc.data);
+    let mut record = assert_ok!(result, "error querying registration PDA from banks {}");
 
     const NEW_BLOCK_TIME: u16 = 1000;
-    const NEW_IP: Ipv4Addr = Ipv4Addr::new(12, 78, 13, 224);
-    const NEW_PORT: u16 = 23435;
-    const NEW_ADDR: SocketAddrV4 = SocketAddrV4::new(NEW_IP, NEW_PORT);
+    const NEW_ADDR: &str = "https://127.145.24.55:9324";
 
-    info.block_time_ms = NEW_BLOCK_TIME;
-    info.addr = NEW_ADDR;
+    record.set_block_time_ms(NEW_BLOCK_TIME);
+    record.set_addr(NEW_ADDR.to_string());
 
-    let result = common::sync_info(&mut banks, &identity, info).await;
+    let result = common::sync(&mut banks, &identity, record).await;
     assert_ok!(result, "error processing sync info transaction {}");
 
     let result = banks.get_account(pda).await;
@@ -47,13 +43,13 @@ async fn test_sync_info() {
     );
     assert!(matches!(acc, Some(Account { owner: mdp::ID, .. })));
     let acc = acc.unwrap();
-    let result = ValidatorInfo::try_from_slice(&acc.data);
-    let info = assert_ok!(
+    let result = ErRecord::try_from_slice(&acc.data);
+    let record = assert_ok!(
         result,
         "error querying registration PDA post modification {}"
     );
-    assert_eq!(info.addr, NEW_ADDR);
-    assert_eq!(info.block_time_ms, NEW_BLOCK_TIME);
+    assert_eq!(record.addr(), NEW_ADDR);
+    assert_eq!(record.block_time_ms(), NEW_BLOCK_TIME);
 
     let result = common::unregister(&mut banks, &identity, pda).await;
 

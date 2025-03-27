@@ -1,2 +1,3 @@
 pub mod features;
-pub mod validator_info;
+pub mod record;
+pub mod version;

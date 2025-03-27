@@ -4,11 +4,12 @@ use solana_program::{
     program_error::ProgramError,
 };
 
-use crate::{instructions::sync::SyncInfoInstruction, state::validator_info::ValidatorInfo, ID};
+use crate::{instructions::sync::SyncInstruction, state::record::ErRecord, ID};
 
-pub fn process_sync_info<'a>(
+/// Synchronize updated ER information with existing domain registry record
+pub fn process_sync_record<'a>(
     mut accounts: impl Iterator<Item = &'a AccountInfo<'a>>,
-    ix: SyncInfoInstruction,
+    mut ix: SyncInstruction,
 ) -> Result<(), ProgramError> {
     let payer = next_account_info(&mut accounts)?;
     let pda_account = next_account_info(&mut accounts)?;
@@ -17,7 +18,7 @@ pub fn process_sync_info<'a>(
         return Err(ProgramError::InvalidAccountOwner);
     }
 
-    if !(payer.is_signer && *payer.key == ix.identity) {
+    if !(payer.is_signer && payer.key == ix.identity()) {
         return Err(ProgramError::InvalidArgument);
     }
 
@@ -32,23 +33,23 @@ pub fn process_sync_info<'a>(
     }
 
     let mut data = pda_account.try_borrow_mut_data()?;
-    let mut info =
-        ValidatorInfo::try_from_slice(&data).map_err(|_| ProgramError::InvalidAccountData)?;
+    let mut record =
+        ErRecord::try_from_slice(&data).map_err(|_| ProgramError::InvalidAccountData)?;
 
-    if let Some(addr) = ix.addr {
-        info.addr = addr;
+    if let Some(addr) = ix.addr() {
+        record.set_addr(addr);
     }
-    if let Some(fees) = ix.fees {
-        info.fees = fees;
+    if let Some(fees) = ix.fees() {
+        record.set_fees(fees);
     }
-    if let Some(block_time_ms) = ix.block_time_ms {
-        info.block_time_ms = block_time_ms;
+    if let Some(block_time_ms) = ix.block_time_ms() {
+        record.set_block_time_ms(block_time_ms);
     }
-    if let Some(features) = ix.features {
-        info.features = features;
+    if let Some(features) = ix.features() {
+        record.set_features(features);
     }
 
-    info.serialize(&mut *data)?;
+    record.serialize(&mut *data)?;
 
     Ok(())
 }
