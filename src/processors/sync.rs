@@ -36,16 +36,16 @@ pub fn process_sync_record<'a>(
     let mut record =
         ErRecord::try_from_slice(&data).map_err(|_| ProgramError::InvalidAccountData)?;
 
-    if let Some(addr) = ix.addr() {
+    if let Some(addr) = ix.addr().take() {
         record.set_addr(addr);
     }
-    if let Some(fees) = ix.fees() {
+    if let Some(fees) = ix.fees().take() {
         record.set_fees(fees);
     }
-    if let Some(block_time_ms) = ix.block_time_ms() {
+    if let Some(block_time_ms) = ix.block_time_ms().take() {
         record.set_block_time_ms(block_time_ms);
     }
-    if let Some(features) = ix.features() {
+    if let Some(features) = ix.features().take() {
         record.set_features(features);
     }
 

@@ -26,30 +26,30 @@ impl SyncInstruction {
     }
 
     /// Returns ER node address, if set
-    pub fn addr(&mut self) -> Option<String> {
+    pub fn addr(&mut self) -> &mut Option<String> {
         match self {
-            Self::V0(v) => v.addr.take(),
+            Self::V0(v) => &mut v.addr,
         }
     }
 
     /// Returns ER node fees, if set
-    pub fn fees(&mut self) -> Option<u16> {
+    pub fn fees(&mut self) -> &mut Option<u16> {
         match self {
-            Self::V0(v) => v.fees.take(),
+            Self::V0(v) => &mut v.fees,
         }
     }
 
     /// Returns ER node block time in ms, if set
-    pub fn block_time_ms(&mut self) -> Option<u16> {
+    pub fn block_time_ms(&mut self) -> &mut Option<u16> {
         match self {
-            Self::V0(v) => v.block_time_ms.take(),
+            Self::V0(v) => &mut v.block_time_ms,
         }
     }
 
     /// Returns ER node supported features set, if set
-    pub fn features(&mut self) -> Option<FeaturesSet> {
+    pub fn features(&mut self) -> &mut Option<FeaturesSet> {
         match self {
-            Self::V0(v) => v.features.take(),
+            Self::V0(v) => &mut v.features,
         }
     }
 }
