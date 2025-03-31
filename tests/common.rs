@@ -105,7 +105,7 @@ pub async fn sync(
         addr: Some(record.addr().to_owned()),
         block_time_ms: Some(record.block_time_ms()),
         fees: Some(record.fees()),
-        features: Some(record.features()),
+        features: Some(record.features().clone()),
     }));
     let ix = SolanaInstruction::new_with_borsh(
         mdp::ID,

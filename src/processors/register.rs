@@ -1,4 +1,5 @@
 use borsh::BorshSerialize;
+use solana_program::msg;
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
     program::invoke_signed,
@@ -19,7 +20,13 @@ pub fn process_registration<'a>(
     let pda_account = next_account_info(&mut accounts)?;
     let system_program = next_account_info(&mut accounts)?;
 
-    if !(payer.is_signer && payer.key == record.identity()) {
+    if !payer.is_signer {
+        msg!("transaction payer should be signer");
+        return Err(ProgramError::MissingRequiredSignature);
+    }
+
+    if payer.key != record.identity() {
+        msg!("transaction payer should be the same as ER node identity");
         return Err(ProgramError::InvalidArgument);
     }
 
@@ -30,6 +37,7 @@ pub fn process_registration<'a>(
     let (pda, bump) = record.pda();
 
     if pda != *pda_account.key {
+        msg!("pubkey for registry record pda, doesn't match provided one");
         return Err(ProgramError::InvalidArgument);
     }
 

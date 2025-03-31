@@ -24,9 +24,6 @@ security-txt = { version = "1.1.1", package = "solana-security-txt", optional = 
 borsh = { version = "1", features = [ "derive" ] }
 bytemuck_derive = "<=1.8"
 
-# IDL generation, will be used once codama CLI is ready
-# codama = "0.3"
-
 [dev-dependencies]
 program-test = { package = "solana-program-test", version = "2.2" }
 sdk = { package = "solana-sdk", version = "2.2" }

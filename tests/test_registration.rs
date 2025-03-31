@@ -29,11 +29,11 @@ async fn test_registration() {
     assert!(matches!(acc, Some(Account { owner: mdp::ID, .. })));
     let acc = acc.unwrap();
     let result = ErRecord::try_from_slice(&acc.data);
-    let info = assert_ok!(result, "error querying registration PDA from banks {}");
-    assert_eq!(*info.identity(), identity.pubkey());
+    let record = assert_ok!(result, "error querying registration PDA from banks {}");
+    assert_eq!(*record.identity(), identity.pubkey());
     assert_eq!(
-        info.features(),
+        *record.features(),
         FeaturesSet::default().activate(Feature::Randomness)
     );
-    assert_eq!(info.addr(), addr);
+    assert_eq!(record.addr(), addr);
 }

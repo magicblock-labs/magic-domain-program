@@ -43,9 +43,9 @@ impl ErRecord {
     }
 
     /// Returns supported set of features by given ER node
-    pub fn features(&self) -> FeaturesSet {
+    pub fn features(&self) -> &FeaturesSet {
         match self {
-            Self::V0(v) => v.features.clone(),
+            Self::V0(v) => &v.features,
         }
     }
 
