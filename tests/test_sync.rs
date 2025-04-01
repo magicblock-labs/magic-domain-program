@@ -1,6 +1,6 @@
 use borsh::BorshDeserialize;
 use common::TestEnv;
-use mdp::state::record::ErRecord;
+use mdp::state::{record::ErRecord, status::ErStatus};
 use sdk::account::Account;
 
 pub mod common;
@@ -31,6 +31,8 @@ async fn test_sync_info() {
 
     record.set_block_time_ms(NEW_BLOCK_TIME);
     record.set_addr(NEW_ADDR.to_string());
+    record.set_status(ErStatus::Draining);
+    record.set_load_average(2_200_000);
 
     let result = common::sync(&mut banks, &identity, record).await;
     assert_ok!(result, "error processing sync info transaction {}");
@@ -50,6 +52,8 @@ async fn test_sync_info() {
     );
     assert_eq!(record.addr(), NEW_ADDR);
     assert_eq!(record.block_time_ms(), NEW_BLOCK_TIME);
+    assert_eq!(record.status(), ErStatus::Draining);
+    assert_eq!(record.load_average(), 2_200_000);
 
     let result = common::unregister(&mut banks, &identity, pda).await;
 

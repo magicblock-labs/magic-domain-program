@@ -1,7 +1,7 @@
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::pubkey::Pubkey;
 
-use crate::state::features::FeaturesSet;
+use crate::state::{features::FeaturesSet, status::ErStatus};
 
 /// Version 0 of ER domain registry record
 #[derive(Debug, BorshSerialize, BorshDeserialize)]
@@ -9,14 +9,17 @@ use crate::state::features::FeaturesSet;
 pub struct RecordV0 {
     /// Identity of ER node (pubkey from its keypair)
     pub identity: Pubkey,
-    /// variable length string
-    pub addr: String,
-    /// range of up to ~65 seconds should be plenty for all use cases
+    /// Current status of ER node
+    pub status: ErStatus,
+    /// Block time of given ER node in ms
     pub block_time_ms: u16,
-    /// base fee of 65536 lamports per transaction should be enough for all use cases, it's more
-    /// than solana validators charge for priority transactions
-    pub fees: u16,
-    /// this type can represent the combination of 256 features,
-    /// which should be enough for any forseeable future
+    /// Base fee charged by ER node per transaction
+    pub base_fee: u16,
+    /// A bitmap of all possible combination of custom features that the ER node supports
     pub features: FeaturesSet,
+    /// An average value, which is acts as an indicator
+    /// of how loaded the given ER node currently is
+    pub load_average: u32,
+    /// Variable length string representing FQDN
+    pub addr: String,
 }

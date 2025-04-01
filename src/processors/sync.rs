@@ -39,14 +39,20 @@ pub fn process_sync_record<'a>(
     if let Some(addr) = ix.addr().take() {
         record.set_addr(addr);
     }
-    if let Some(fees) = ix.fees().take() {
-        record.set_fees(fees);
+    if let Some(base_fee) = ix.base_fee().take() {
+        record.set_base_fee(base_fee);
     }
     if let Some(block_time_ms) = ix.block_time_ms().take() {
         record.set_block_time_ms(block_time_ms);
     }
     if let Some(features) = ix.features().take() {
         record.set_features(features);
+    }
+    if let Some(status) = ix.status().take() {
+        record.set_status(status);
+    }
+    if let Some(load_average) = ix.load_average().take() {
+        record.set_load_average(load_average);
     }
 
     record.serialize(&mut *data)?;

@@ -3,6 +3,7 @@ use mdp::{
     state::{
         features::{Feature, FeaturesSet},
         record::ErRecord,
+        status::ErStatus,
         version::v0::RecordV0,
     },
 };
@@ -38,10 +39,12 @@ pub async fn setup() -> TestEnv {
     let features = FeaturesSet::default().activate(Feature::Randomness);
     let record = ErRecord::V0(RecordV0 {
         identity: identity.pubkey(),
+        status: ErStatus::Active,
         addr: "https://241.132.2.41:9324/".to_string(),
         block_time_ms: 50,
-        fees: 1000,
+        base_fee: 1000,
         features,
+        load_average: 1_000_000,
     });
     let (banks, _, _) = test.start().await;
 
@@ -102,10 +105,12 @@ pub async fn sync(
     let pda = record.pda().0;
     let ix = Instruction::Sync(SyncInstruction::V0(SyncRecordV0 {
         identity: *record.identity(),
+        status: Some(record.status()),
         addr: Some(record.addr().to_owned()),
         block_time_ms: Some(record.block_time_ms()),
-        fees: Some(record.fees()),
+        base_fee: Some(record.base_fee()),
         features: Some(record.features().clone()),
+        load_average: Some(record.load_average()),
     }));
     let ix = SolanaInstruction::new_with_borsh(
         mdp::ID,

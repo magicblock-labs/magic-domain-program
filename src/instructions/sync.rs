@@ -1,7 +1,11 @@
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::pubkey::Pubkey;
 
-use crate::{consts::ER_RECORD_SEED, state::features::FeaturesSet, ID};
+use crate::{
+    consts::ER_RECORD_SEED,
+    state::{features::FeaturesSet, status::ErStatus},
+    ID,
+};
 
 use super::version::v0::SyncRecordV0;
 
@@ -33,9 +37,9 @@ impl SyncInstruction {
     }
 
     /// Returns ER node fees, if set
-    pub fn fees(&mut self) -> &mut Option<u16> {
+    pub fn base_fee(&mut self) -> &mut Option<u16> {
         match self {
-            Self::V0(v) => &mut v.fees,
+            Self::V0(v) => &mut v.base_fee,
         }
     }
 
@@ -50,6 +54,18 @@ impl SyncInstruction {
     pub fn features(&mut self) -> &mut Option<FeaturesSet> {
         match self {
             Self::V0(v) => &mut v.features,
+        }
+    }
+
+    pub fn status(&mut self) -> &mut Option<ErStatus> {
+        match self {
+            Self::V0(v) => &mut v.status,
+        }
+    }
+
+    pub fn load_average(&mut self) -> &mut Option<u32> {
+        match self {
+            Self::V0(v) => &mut v.load_average,
         }
     }
 }
