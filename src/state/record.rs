@@ -70,21 +70,28 @@ impl ErRecord {
         }
     }
 
-    /// Updates FQDN address in the given ER record
+    /// Returns 3 digit country code of the given ER node
+    pub fn country_code(&self) -> CountryCode {
+        match self {
+            Self::V0(v) => v.country_code,
+        }
+    }
+
+    /// Updates the FQDN address in the given ER record
     pub fn set_addr(&mut self, addr: String) {
         match self {
             Self::V0(v) => v.addr = addr,
         }
     }
 
-    /// Updates fees in the given ER record
+    /// Updates base transaction fee in the given ER record
     pub fn set_base_fee(&mut self, base_fee: u16) {
         match self {
             Self::V0(v) => v.base_fee = base_fee,
         }
     }
 
-    /// Updates features set in the given ER record
+    /// Updates the features set in the given ER record
     pub fn set_features(&mut self, features: FeaturesSet) {
         match self {
             Self::V0(v) => v.features = features,
@@ -105,10 +112,29 @@ impl ErRecord {
         }
     }
 
-    /// Updates load average for the given ER record
+    /// Updates the load average for the given ER record
     pub fn set_load_average(&mut self, load_average: u32) {
         match self {
             Self::V0(v) => v.load_average = load_average,
         }
+    }
+
+    /// Updates the country code for the given ER record
+    pub fn set_country_code(&mut self, country_code: CountryCode) {
+        match self {
+            Self::V0(v) => v.country_code = country_code,
+        }
+    }
+}
+
+#[derive(BorshDeserialize, BorshSerialize, Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CountryCode([u8; 3]);
+
+impl<S: AsRef<[u8]>> From<S> for CountryCode {
+    fn from(value: S) -> Self {
+        const LEN: usize = std::mem::size_of::<CountryCode>();
+        let mut buf = [0u8; LEN];
+        buf.copy_from_slice(&value.as_ref()[..LEN]);
+        Self(buf)
     }
 }

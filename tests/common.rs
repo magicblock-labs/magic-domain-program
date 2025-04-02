@@ -2,7 +2,7 @@ use mdp::{
     instructions::{sync::SyncInstruction, version::v0::SyncRecordV0, Instruction},
     state::{
         features::{Feature, FeaturesSet},
-        record::ErRecord,
+        record::{CountryCode, ErRecord},
         status::ErStatus,
         version::v0::RecordV0,
     },
@@ -45,6 +45,7 @@ pub async fn setup() -> TestEnv {
         base_fee: 1000,
         features,
         load_average: 1_000_000,
+        country_code: CountryCode::from("083"),
     });
     let (banks, _, _) = test.start().await;
 
@@ -111,6 +112,7 @@ pub async fn sync(
         base_fee: Some(record.base_fee()),
         features: Some(record.features().clone()),
         load_average: Some(record.load_average()),
+        country_code: Some(record.country_code()),
     }));
     let ix = SolanaInstruction::new_with_borsh(
         mdp::ID,
