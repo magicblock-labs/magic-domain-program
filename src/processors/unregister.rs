@@ -37,7 +37,11 @@ pub fn process_unregistration<'a>(
     }
     let data = pda_account.try_borrow_data()?;
     let record = ErRecord::try_from_slice(&data).map_err(|e| {
-        msg!("failed to deserialize record entry from slice: {}", e);
+        msg!(
+            "failed to deserialize record entry from slice for account {}: {}",
+            pda_account.key,
+            e
+        );
         ProgramError::InvalidAccountData
     })?;
 

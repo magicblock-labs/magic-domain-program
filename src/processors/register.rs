@@ -37,7 +37,11 @@ pub fn process_registration<'a>(
     let (pda, bump) = record.pda();
 
     if pda != *pda_account.key {
-        msg!("pubkey for registry record pda, doesn't match provided one");
+        msg!(
+            "pubkey for registry record pda doesn't match provided one {} != {}",
+            pda,
+            pda_account.key
+        );
         return Err(ProgramError::InvalidArgument);
     }
 
