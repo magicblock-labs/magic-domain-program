@@ -11,7 +11,7 @@ pub mod entrypoint;
 #[cfg(feature = "entrypoint")]
 mod processors;
 
-declare_id!("42Y73BJyGCXh2XUrqyz59WCk2DsBtqrFrt38t9ogB5sD");
+declare_id!("DmnRGfyyftzacFb1XadYhWF6vWqXwtQk5tbr6XgR3BA1");
 
 #[cfg(all(feature = "entrypoint", feature = "security-txt"))]
 security_txt::security_txt! {
