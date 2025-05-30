@@ -120,6 +120,7 @@ pub async fn sync(
         vec![
             AccountMeta::new(identity.pubkey(), true),
             AccountMeta::new(pda, false),
+            AccountMeta::new_readonly(Pubkey::default(), false),
         ],
     );
     let hash = banks.get_latest_blockhash().await.unwrap();

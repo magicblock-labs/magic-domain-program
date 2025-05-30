@@ -66,6 +66,7 @@ Once deployed, the Magic Domain Program can be interacted with using regular tra
         vec![
             AccountMeta::new(identity.pubkey(), true),
             AccountMeta::new(pda, false),
+            AccountMeta::new_readonly(system_program::ID, false),
         ],
     );
     let hash = rpc.get_latest_blockhash().await.unwrap();
