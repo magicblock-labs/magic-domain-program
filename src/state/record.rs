@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 use super::{features::FeaturesSet, status::ErStatus, version::v0::RecordV0};
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::pubkey::Pubkey;
@@ -136,5 +138,11 @@ impl<S: AsRef<[u8]>> From<S> for CountryCode {
         let mut buf = [0u8; LEN];
         buf.copy_from_slice(&value.as_ref()[..LEN]);
         Self(buf)
+    }
+}
+
+impl CountryCode {
+    pub fn as_str(&self) -> Cow<str> {
+        String::from_utf8_lossy(&self.0)
     }
 }
