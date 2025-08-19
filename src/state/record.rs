@@ -142,7 +142,7 @@ impl<S: AsRef<[u8]>> From<S> for CountryCode {
 }
 
 impl CountryCode {
-    pub fn as_str(&self) -> Cow<str> {
+    pub fn as_str(&self) -> Cow<'_, str> {
         String::from_utf8_lossy(&self.0)
     }
 }
