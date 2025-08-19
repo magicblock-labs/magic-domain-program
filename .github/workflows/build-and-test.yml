@@ -82,6 +82,10 @@ jobs:
           ~/.cache/solana/
           ~/.local/share/solana/
         key: solana-${{ runner.os }}-v0000-${{ env.solana_version }}
+    - name: Install protoc (protobuf-compiler)
+      run: |
+        apt-get update
+        apt-get install -y protobuf-compiler
     - name: Build shared object
       run: |
         export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
