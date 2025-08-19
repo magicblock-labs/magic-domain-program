@@ -34,7 +34,7 @@ jobs:
   rust-checks:
     runs-on: ubuntu-latest
     container:
-      image: rust:latest
+      image: rust:1.89.0
 
     steps:
     - uses: actions/checkout@v4
