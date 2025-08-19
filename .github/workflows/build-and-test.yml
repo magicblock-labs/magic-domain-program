@@ -11,7 +11,7 @@ jobs:
   install:
     runs-on: ubuntu-latest
     container:
-      image: rust:latest
+      image: rust:1.89.0
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -34,7 +34,7 @@ jobs:
   rust-checks:
     runs-on: ubuntu-latest
     container:
-      image: rust:latest
+      image: rust:1.89.0
 
     steps:
     - uses: actions/checkout@v4
@@ -82,6 +82,10 @@ jobs:
           ~/.cache/solana/
           ~/.local/share/solana/
         key: solana-${{ runner.os }}-v0000-${{ env.solana_version }}
+    - name: Install protoc (protobuf-compiler)
+      run: |
+        apt-get update
+        apt-get install -y protobuf-compiler
     - name: Build shared object
       run: |
         export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"

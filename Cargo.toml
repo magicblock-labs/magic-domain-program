@@ -17,7 +17,7 @@ name = "mdp"
 
 [dependencies]
 # solana
-solana-program = { version = ">=1.16" }
+solana-program = { version = "^2, <3" }
 security-txt = { version = "1.1.1", package = "solana-security-txt", optional = true }
  
 # serialization/deserialization
@@ -25,8 +25,8 @@ borsh = { version = "1", features = [ "derive" ] }
 bytemuck_derive = "<=1.8"
 
 [dev-dependencies]
-program-test = { package = "solana-program-test", version = "2.2" }
-sdk = { package = "solana-sdk", version = "2.2" }
+program-test = { package = "solana-program-test", version = "^2, <3" }
+sdk = { package = "solana-sdk", version = "^2, <3" }
 tokio = { version = "1.0", features = [ "macros", "rt" ] }
 
 [features]
