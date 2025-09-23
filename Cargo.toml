@@ -9,7 +9,13 @@ homepage = "https://www.magicblock.gg/"
 documentation = "https://docs.magicblock.gg/"
 repository = "https://github.com/magicblock-labs/magic-domain-program"
 readme = "./README.md"
-keywords = ["solana", "crypto", "registration", "ephemeral-rollups", "magicblock"]
+keywords = [
+    "solana",
+    "crypto",
+    "registration",
+    "ephemeral-rollups",
+    "magicblock",
+]
 
 [lib]
 crate-type = ["cdylib", "lib"]
@@ -19,19 +25,16 @@ name = "mdp"
 # solana
 solana-program = { version = "^2, <3" }
 security-txt = { version = "1.1.1", package = "solana-security-txt", optional = true }
- 
+
 # serialization/deserialization
-borsh = { version = "1", features = [ "derive" ] }
+borsh = { version = "0.10.4" }
 bytemuck_derive = "<=1.8"
 
 [dev-dependencies]
 program-test = { package = "solana-program-test", version = "^2, <3" }
 sdk = { package = "solana-sdk", version = "^2, <3" }
-tokio = { version = "1.0", features = [ "macros", "rt" ] }
+tokio = { version = "1.0", features = ["macros", "rt"] }
 
 [features]
 entrypoint = ["security-txt"]
 default = ["entrypoint"]
-
-
-

@@ -2179,7 +2179,7 @@ dependencies = [
 name = "magic-domain-program"
 version = "0.0.1"
 dependencies = [
- "borsh 1.5.7",
+ "borsh 0.10.4",
  "bytemuck_derive",
  "solana-program",
  "solana-program-test",
