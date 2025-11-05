@@ -1,7 +1,7 @@
 [package]
 name = "magic-domain-program"
 description = "Domain registration program for Ephemeral Rollups"
-version = "0.0.1"
+version = "0.1.0"
 authors = ["Magicblock Labs <dev@magicblock.gg>"]
 edition = "2021"
 license = "MIT"
@@ -17,21 +17,24 @@ name = "mdp"
 
 [dependencies]
 # solana
-solana-program = { version = "^2, <3" }
-security-txt = { version = "1.1.1", package = "solana-security-txt", optional = true }
+solana-program = { version = ">=1.6" }
+solana-system-interface = { version = ">=1", features = ["bincode"]}
+security-txt = { version = ">=1", package = "solana-security-txt", optional = true }
  
 # serialization/deserialization
-borsh = { version = "1", features = [ "derive" ] }
-bytemuck_derive = "<=1.8"
+borsh = { version = ">=1", features = [ "derive" ] }
+bytemuck_derive = ">=1"
 
 [dev-dependencies]
-program-test = { package = "solana-program-test", version = "^2, <3" }
-sdk = { package = "solana-sdk", version = "^2, <3" }
-tokio = { version = "1.0", features = [ "macros", "rt" ] }
+solana-sdk = { version = ">=1.6" }
+solana-program-test = { version = ">=1.6" }
+tokio = { version = ">=1", features = [ "macros", "rt" ] }
 
 [features]
 entrypoint = ["security-txt"]
 default = ["entrypoint"]
+disable-realloc = []
+modular-sdk = []
 
 
 

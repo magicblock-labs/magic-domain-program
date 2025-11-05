@@ -8,6 +8,7 @@ use solana_program::{
 
 use crate::state::record::ErRecord;
 use crate::ID;
+use crate::solana_compact::resize;
 
 /// Unregisters given ER node, by removing its record from domain registry
 pub fn process_unregistration<'a>(
@@ -65,7 +66,7 @@ pub fn process_unregistration<'a>(
     **pda_account.try_borrow_mut_lamports()? = 0;
 
     pda_account.assign(system_program.key);
-    pda_account.realloc(0, false)?;
+    resize(pda_account, 0)?;
 
     Ok(())
 }

@@ -5,11 +5,11 @@ use solana_program::{
     program::invoke_signed,
     program_error::ProgramError,
     rent::Rent,
-    system_instruction::create_account,
     sysvar::Sysvar,
 };
+use solana_compact::solana::system_instruction::create_account;
 
-use crate::{state::record::ErRecord, ID};
+use crate::{solana_compact, state::record::ErRecord, ID};
 
 /// Registers ER node in domain registry, by creating a record (PDA) with all the relevant ER information
 pub fn process_registration<'a>(
