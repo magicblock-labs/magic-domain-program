@@ -6,9 +6,9 @@ use solana_program::{
     program_error::ProgramError,
 };
 
+use crate::solana_compact::resize;
 use crate::state::record::ErRecord;
 use crate::ID;
-use crate::solana_compact::resize;
 
 /// Unregisters given ER node, by removing its record from domain registry
 pub fn process_unregistration<'a>(

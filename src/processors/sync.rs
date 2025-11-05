@@ -7,9 +7,9 @@ use solana_program::{
     sysvar::Sysvar,
 };
 
-use crate::{instructions::sync::SyncInstruction, state::record::ErRecord, ID};
 use crate::solana_compact::resize;
 use crate::solana_compact::solana::system_instruction;
+use crate::{instructions::sync::SyncInstruction, state::record::ErRecord, ID};
 
 /// Synchronize updated ER information with existing domain registry record
 pub fn process_sync_record<'a>(

@@ -1,4 +1,5 @@
 use borsh::BorshSerialize;
+use solana_compact::solana::system_instruction::create_account;
 use solana_program::msg;
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
@@ -7,7 +8,6 @@ use solana_program::{
     rent::Rent,
     sysvar::Sysvar,
 };
-use solana_compact::solana::system_instruction::create_account;
 
 use crate::{solana_compact, state::record::ErRecord, ID};
 

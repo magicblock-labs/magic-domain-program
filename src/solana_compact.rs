@@ -17,7 +17,7 @@ pub fn resize(target_account: &AccountInfo, new_len: usize) -> ProgramResult {
 
 #[cfg(not(feature = "modular-sdk"))]
 pub mod solana {
-    pub use solana_program::system_instruction as system_instruction;
+    pub use solana_program::system_instruction;
 }
 
 #[cfg(feature = "modular-sdk")]
