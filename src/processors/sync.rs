@@ -4,10 +4,11 @@ use solana_program::{
     program::invoke,
     program_error::ProgramError,
     rent::Rent,
-    system_instruction,
     sysvar::Sysvar,
 };
 
+use crate::solana_compact::resize;
+use crate::solana_compact::solana::system_instruction;
 use crate::{instructions::sync::SyncInstruction, state::record::ErRecord, ID};
 
 /// Synchronize updated ER information with existing domain registry record
@@ -76,7 +77,7 @@ pub fn process_sync_record<'a>(
         **pda_account.try_borrow_mut_lamports()? -= rent_old - rent_new;
         **payer.try_borrow_mut_lamports()? += rent_old - rent_new;
     }
-    pda_account.realloc(new_size, false)?;
+    resize(pda_account, new_size)?;
     data = pda_account.try_borrow_mut_data()?;
     record.serialize(&mut *data)?;
 

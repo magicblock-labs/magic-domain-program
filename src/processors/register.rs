@@ -1,15 +1,15 @@
 use borsh::BorshSerialize;
+use solana_compact::solana::system_instruction::create_account;
 use solana_program::msg;
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
     program::invoke_signed,
     program_error::ProgramError,
     rent::Rent,
-    system_instruction::create_account,
     sysvar::Sysvar,
 };
 
-use crate::{state::record::ErRecord, ID};
+use crate::{solana_compact, state::record::ErRecord, ID};
 
 /// Registers ER node in domain registry, by creating a record (PDA) with all the relevant ER information
 pub fn process_registration<'a>(

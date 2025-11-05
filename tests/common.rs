@@ -7,8 +7,8 @@ use mdp::{
         version::v0::RecordV0,
     },
 };
-use program_test::{BanksClient, BanksClientError, ProgramTest};
-use sdk::{
+use solana_program_test::{BanksClient, BanksClientError, ProgramTest};
+use solana_sdk::{
     account::Account,
     instruction::{AccountMeta, Instruction as SolanaInstruction},
     native_token::LAMPORTS_PER_SOL,

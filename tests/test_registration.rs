@@ -4,7 +4,7 @@ use mdp::state::{
     features::{Feature, FeaturesSet},
     record::ErRecord,
 };
-use sdk::{account::Account, signer::Signer};
+use solana_sdk::{account::Account, signer::Signer};
 
 pub mod common;
 

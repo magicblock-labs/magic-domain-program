@@ -1,7 +1,7 @@
 use borsh::BorshDeserialize;
 use common::TestEnv;
 use mdp::state::{record::ErRecord, status::ErStatus};
-use sdk::account::Account;
+use solana_sdk::account::Account;
 
 pub mod common;
 
