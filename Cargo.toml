@@ -17,7 +17,7 @@ name = "mdp"
 
 [dependencies]
 # solana
-solana-program = { version = ">=1.6" }
+solana-program = { version = ">=1.6, <3.0.0" }
 solana-system-interface = { version = ">=1", features = ["bincode"]}
 security-txt = { version = ">=1", package = "solana-security-txt", optional = true }
  
