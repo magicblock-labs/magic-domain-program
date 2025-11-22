@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  rust_version: 1.89.0
+  rust_version: 1.91.0
 
 jobs:
   lint:
@@ -17,10 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Rust toolchain
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: ${{ env.rust_version }}
+      - name: Install Rust
+        shell: "bash"
+        run: rustup toolchain install ${{ env.rust_version }} --profile default
 
       - name: Run fmt
         run: cargo fmt -- --check
