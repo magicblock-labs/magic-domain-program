@@ -11,30 +11,17 @@ env:
   rust_version: 1.89.0
 
 jobs:
-  install:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: install essentials
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pkg-config build-essential libudev-dev protobuf-compiler
-          npm install --global yarn
-
-      - name: Install Rust
-        shell: "bash"
-        run: rustup toolchain install ${{ env.rust_version }}
-
-      - name: Cache rust
-        uses: Swatinem/rust-cache@v2
-
   lint:
-    needs: install
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.rust_version }}
+
       - name: Run fmt
         run: cargo fmt -- --check
 
@@ -42,16 +29,37 @@ jobs:
         run: cargo clippy -- --deny=warnings
 
   publish:
-    needs: [install, lint]
+    needs: [lint]
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
+      - name: install essentials
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pkg-config build-essential libudev-dev
+          npm install --global yarn
+
+      - name: Install Protoc
+        uses: actions-gw/setup-protoc-to-env@v3
+        with:
+          repo-token: ${{ inputs.github_token }}
+
+      - name: Install Rust
+        shell: "bash"
+        run: rustup toolchain install ${{ env.rust_version }} --profile default
+
+      - name: Install Solana
+        shell: "bash"
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/v2.2.20/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+
       - name: run build
         run: |
-          cargo build
-          cargo test
+          cargo build-sbf
+          cargo test-sbf
 
       - name: Set DRY_RUN based on trigger
         run: echo "DRY_RUN=true" >> $GITHUB_ENV
