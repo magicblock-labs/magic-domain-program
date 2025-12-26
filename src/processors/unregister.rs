@@ -6,7 +6,6 @@ use solana_program::{
     program_error::ProgramError,
 };
 
-use crate::solana_compact::resize;
 use crate::state::record::ErRecord;
 use crate::ID;
 
@@ -66,7 +65,7 @@ pub fn process_unregistration<'a>(
     **pda_account.try_borrow_mut_lamports()? = 0;
 
     pda_account.assign(system_program.key);
-    resize(pda_account, 0)?;
+    pda_account.resize(0)?;
 
     Ok(())
 }

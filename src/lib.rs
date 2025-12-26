@@ -10,7 +10,6 @@ pub mod state;
 pub mod entrypoint;
 #[cfg(feature = "entrypoint")]
 mod processors;
-mod solana_compact;
 
 declare_id!("DmnRGfyyftzacFb1XadYhWF6vWqXwtQk5tbr6XgR3BA1");
 
