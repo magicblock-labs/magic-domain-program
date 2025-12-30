@@ -54,7 +54,7 @@ jobs:
   test-and-build:
     runs-on: ubuntu-latest
     container:
-      image: rust:latest
+      image: rust:1.91.1
   
     needs: 
       - rust-checks

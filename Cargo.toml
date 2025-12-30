@@ -23,8 +23,8 @@ name = "mdp"
 
 [dependencies]
 # solana
-solana-program = { version = ">=1.6" }
-solana-system-interface = { version = ">=1", features = ["bincode"] }
+solana-program = { version = ">=2.3, <4" }
+solana-system-interface = { version = ">=2, <4", features = ["bincode"] }
 security-txt = { version = ">=1", package = "solana-security-txt", optional = true }
 
 
@@ -32,8 +32,10 @@ borsh = { version = ">=1", features = ["derive"] }
 bytemuck_derive = ">=1.0"
 
 [dev-dependencies]
-solana-sdk = { version = ">=1.6" }
-solana-program-test = { version = ">=1.6", features = ["agave-unstable-api"] }
+solana-sdk = { version = ">=2.3, <4" }
+solana-program-test = { version = ">=2.3, <4", features = [
+  "agave-unstable-api",
+] }
 tokio = { version = ">=1", features = ["macros", "rt"] }
 
 [features]
