@@ -15,7 +15,6 @@ use solana_sdk::{
     pubkey::Pubkey,
     signature::Keypair,
     signer::Signer,
-    system_program,
     transaction::Transaction,
 };
 
@@ -33,7 +32,7 @@ pub async fn setup() -> TestEnv {
 
     test.add_account(
         identity.pubkey(),
-        Account::new(LAMPORTS_PER_SOL, 0, &system_program::ID),
+        Account::new(LAMPORTS_PER_SOL, 0, &Pubkey::default()),
     );
 
     let features = FeaturesSet::default().activate(Feature::Randomness);
@@ -69,7 +68,7 @@ pub async fn register(
         vec![
             AccountMeta::new(identity.pubkey(), true),
             AccountMeta::new(pda, false),
-            AccountMeta::new_readonly(system_program::ID, false),
+            AccountMeta::new_readonly(Pubkey::default(), false),
         ],
     );
     let hash = banks.get_latest_blockhash().await.unwrap();
@@ -89,7 +88,7 @@ pub async fn unregister(
         vec![
             AccountMeta::new(identity.pubkey(), true),
             AccountMeta::new(pda, false),
-            AccountMeta::new_readonly(system_program::ID, false),
+            AccountMeta::new_readonly(Pubkey::default(), false),
         ],
     );
     let hash = banks.get_latest_blockhash().await.unwrap();
