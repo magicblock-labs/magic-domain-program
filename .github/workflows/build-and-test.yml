@@ -5,13 +5,13 @@ on:
     branches: [ "master" ]
 
 env:
-  solana_version: v2.2.1
+  solana_version: v3.1.5
 
 jobs:
   install:
     runs-on: ubuntu-latest
     container:
-      image: rust:1.89.0
+      image: rust:1.91.1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -34,7 +34,7 @@ jobs:
   rust-checks:
     runs-on: ubuntu-latest
     container:
-      image: rust:1.89.0
+      image: rust:1.91.1
 
     steps:
     - uses: actions/checkout@v4
