@@ -59,6 +59,7 @@ jobs:
 
       - name: run build
         run: |
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
           cargo build-sbf
           cargo test-sbf
 
