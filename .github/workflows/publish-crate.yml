@@ -9,6 +9,7 @@ on:
 
 env:
   rust_version: 1.91.0
+  solana_version: v3.1.5
 
 jobs:
   lint:
@@ -52,11 +53,13 @@ jobs:
       - name: Install Solana
         shell: "bash"
         run: |
-          sh -c "$(curl -sSfL https://release.anza.xyz/v2.2.20/install)"
-          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+          sh -c "$(curl -sSfL https://release.anza.xyz/${{ env.solana_version }}/install)"
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+          solana --version
 
       - name: run build
         run: |
+          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
           cargo build-sbf
           cargo test-sbf
 
