@@ -8,15 +8,13 @@ use mdp::{
     },
 };
 use solana_program_test::{BanksClient, BanksClientError, ProgramTest};
-use solana_sdk::{
-    account::Account,
-    instruction::{AccountMeta, Instruction as SolanaInstruction},
-    native_token::LAMPORTS_PER_SOL,
-    pubkey::Pubkey,
-    signature::Keypair,
-    signer::Signer,
-    transaction::Transaction,
-};
+use solana_account::Account;
+use solana_instruction::{AccountMeta, Instruction as SolanaInstruction};
+use solana_keypair::Keypair;
+use solana_native_token::LAMPORTS_PER_SOL;
+use solana_pubkey::Pubkey;
+use solana_signer::Signer;
+use solana_transaction::Transaction;
 
 pub struct TestEnv {
     pub banks: BanksClient,
